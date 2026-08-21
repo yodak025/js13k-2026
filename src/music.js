@@ -3,7 +3,8 @@
 
 export const BPM = 90
 export const SPB = 60 / BPM   // segundos por pulso
-export const LOOK_AHEAD = 2   // horizonte visible hacia el futuro, en segundos
+export const LOOK_AHEAD = 6   // horizonte visible hacia el futuro, en segundos
+                              // (2 · 3: las notas caen 3 veces más despacio)
 
 const lanes = []              // lanes[i] = carril de la nota del pulso i
 
