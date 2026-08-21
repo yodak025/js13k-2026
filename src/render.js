@@ -17,14 +17,8 @@ const LANE_X = [0, 376, 767, 1121, 1497, 1888, 2263].map(x => x + LANE_W / 2)
 
 const HIT_Y = 0.8   // línea de impacto, fracción de la altura de pantalla
 
-const personaje = loadImage('assets/Personaje.svg')
-const carriles = loadImage('assets/Carriles.svg')
-
-function loadImage(src) {
-  const img = new Image()
-  img.src = src
-  return img
-}
+const personaje = document.getElementById('personaje')
+const carriles = document.getElementById('carriles')
 
 export function render(frame) {
   const w = canvas.width

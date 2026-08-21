@@ -1,0 +1,9 @@
+{
+  "name": "js13k-2026",
+  "private": true,
+  "type": "module",
+  "description": "A game about unicorns and rainbows in less than 13KB",
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  }
+}
