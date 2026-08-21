@@ -4,6 +4,8 @@
   "type": "module",
   "description": "A game about unicorns and rainbows in less than 13KB",
   "scripts": {
+    "dev": "node tools/serve.mjs src",
+    "start": "npm test && node tools/unzip.mjs .js13k/game.zip build && node tools/serve.mjs build",
     "test": "node --test test/*.test.mjs"
   }
 }
