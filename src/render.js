@@ -103,11 +103,18 @@ export function render(frame) {
   ctx.fillStyle = '#222'
   ctx.fillRect(0, 0, w, h)
 
-  // Título cutre provisional: nombre y menú
+  // Título cutre provisional: nombre, menú y créditos
   if (frame.state === 'title') {
     // El nombre es largo: la fuente se acota también por el ancho disponible
     text('STILL HAVE NO NAME FOR THE GAME', w / 2, h * 0.4, Math.min(h * 0.08, w / 21))
     menu(frame.menu, frame.cursor, w / 2, h * 0.6, h * 0.04)
+
+    // Créditos en la esquina inferior derecha
+    ctx.textAlign = 'right'
+    ctx.fillStyle = '#888'
+    ctx.font = `bold ${h * 0.022}px monospace`
+    ctx.fillText('github @yodak025', w - h * 0.03, h - h * 0.07)
+    ctx.fillText('instagram @decoy_art.o', w - h * 0.03, h - h * 0.03)
     return
   }
 
