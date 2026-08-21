@@ -15,7 +15,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Direct pushes to main must pass the same size gate as pull requests;
+  # nothing is published if the game does not fit the js13k budget.
+  size-gate:
+    uses: ./.github/workflows/size-gate.yml
+
   deploy:
+    needs: size-gate
     runs-on: ubuntu-latest
     environment:
       name: github-pages

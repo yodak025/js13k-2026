@@ -1,0 +1,3 @@
+[submodule "tools/js13k-forge"]
+	path = tools/js13k-forge
+	url = https://github.com/pit025/js13k-forge.git

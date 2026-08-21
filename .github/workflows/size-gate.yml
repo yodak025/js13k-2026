@@ -1,0 +1,42 @@
+name: js13k size gate
+
+on:
+  pull_request:
+    branches: [main]
+  # Reusable: the Pages deploy calls this gate on every push to main,
+  # so nothing is published without passing it.
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  size-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      # Deterministic install of the forge toolchain (lockfile in submodule).
+      - name: Install js13k-forge dependencies
+        working-directory: tools/js13k-forge
+        run: npm ci
+
+      # Builds the game and fails unless game.zip is strictly below 13 KiB
+      # (13,312 bytes), with index.html at the archive root.
+      - name: Run size gate
+        run: npm test
+
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: js13k-build
+          path: |
+            .js13k/game.zip
+            .js13k/report.json
+          if-no-files-found: ignore
