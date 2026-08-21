@@ -14,15 +14,32 @@ function lane(i) {
 }
 
 // Reloj provisional basado en performance.now(); cuando exista AudioSynth
-// pasará a derivarse de AudioContext.currentTime
+// pasará a derivarse de AudioContext.currentTime (mismo esquema con pausedDuration)
 let startedAt = 0
+let pausedAt = null   // instante absoluto en que se pausó; null = corriendo
 
+// Arranca una partida nueva: resetea partitura y transporte
 export function start() {
+  lanes.length = 0
   startedAt = performance.now() / 1000
+  pausedAt = null
+}
+
+// Pausar congela el transporte: now() deja de avanzar
+export function pause() {
+  if (pausedAt === null) pausedAt = performance.now() / 1000
+}
+
+// Reanudar desplaza el origen para que las notas no cambien de posición relativa
+export function resume() {
+  if (pausedAt !== null) {
+    startedAt += performance.now() / 1000 - pausedAt
+    pausedAt = null
+  }
 }
 
 export function now() {
-  return performance.now() / 1000 - startedAt
+  return (pausedAt ?? performance.now() / 1000) - startedAt
 }
 
 // MusicFrame mínimo: tiempo actual y notas entre ahora y el horizonte
