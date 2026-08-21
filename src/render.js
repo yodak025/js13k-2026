@@ -20,13 +20,24 @@ const HIT_Y = 0.8   // línea de impacto, fracción de la altura de pantalla
 const personaje = document.getElementById('personaje')
 const carriles = document.getElementById('carriles')
 
-export function render(frame) {
-  const w = canvas.width
-  const h = canvas.height
+// Texto centrado con la fuente cutre provisional
+function text(str, x, y, size, color = '#fff') {
+  ctx.fillStyle = color
+  ctx.font = `bold ${size}px monospace`
+  ctx.textAlign = 'center'
+  ctx.fillText(str, x, y)
+}
 
-  ctx.fillStyle = '#222'
-  ctx.fillRect(0, 0, w, h)
+// Lista de opciones de menú con cursor resaltado
+function menu(options, cursor, x, y, size) {
+  options.forEach((option, i) => {
+    const selected = i === cursor
+    text(`${selected ? '▶ ' : ''}${option}`, x, y + i * size * 1.6, size, selected ? '#fff' : '#888')
+  })
+}
 
+// Escena jugable: unicornio, carriles, línea de impacto, notas y HUD de score
+function drawGame(frame, w, h) {
   if (personaje.complete) {
     const ph = h * 0.85
     const pw = ph * PERSONAJE_ASPECT
@@ -55,12 +66,9 @@ export function render(frame) {
   ctx.stroke()
 
   // Letra de cada carril, bajo la línea de impacto
-  ctx.fillStyle = '#000'
-  ctx.font = `bold ${r * 1.6}px monospace`
-  ctx.textAlign = 'center'
   for (let i = 0; i < 7; i++) {
     const x = cx + (LANE_X[i] / CARRILES_W) * cw
-    ctx.fillText(KEYS[i], x, hitY + r * 2.5)
+    text(KEYS[i], x, hitY + r * 2.5, r * 1.6, '#000')
   }
 
   // Notas: círculos que caen hacia la línea de impacto.
@@ -76,5 +84,56 @@ export function render(frame) {
     ctx.beginPath()
     ctx.arc(x, y, r, 0, 7)
     ctx.fill()
+  }
+
+  // HUD provisional de puntuación
+  text(`Score: ${frame.score}`, w / 2, h * 0.06, h * 0.035)
+}
+
+// Velo semitransparente para modales sobre la escena congelada
+function overlay(w, h) {
+  ctx.fillStyle = 'rgba(0,0,0,.6)'
+  ctx.fillRect(0, 0, w, h)
+}
+
+export function render(frame) {
+  const w = canvas.width
+  const h = canvas.height
+
+  ctx.fillStyle = '#222'
+  ctx.fillRect(0, 0, w, h)
+
+  // Título cutre provisional: nombre, menú y créditos
+  if (frame.state === 'title') {
+    // El nombre es largo: la fuente se acota también por el ancho disponible
+    text('STILL HAVE NO NAME FOR THE GAME', w / 2, h * 0.4, Math.min(h * 0.08, w / 21))
+    menu(frame.menu, frame.cursor, w / 2, h * 0.6, h * 0.04)
+
+    // Créditos en la esquina inferior derecha
+    ctx.textAlign = 'right'
+    ctx.fillStyle = '#888'
+    ctx.font = `bold ${h * 0.022}px monospace`
+    ctx.fillText('github @yodak025', w - h * 0.03, h - h * 0.07)
+    ctx.fillText('instagram @decoy_art.o', w - h * 0.03, h - h * 0.03)
+    return
+  }
+
+  // El reloj está congelado en pausa, así que la escena se dibuja quieta sola
+  if (frame.game) drawGame(frame.game, w, h)
+
+  // Modal de pausa cutre provisional
+  if (frame.state === 'paused') {
+    overlay(w, h)
+    text('PAUSE', w / 2, h * 0.35, h * 0.07)
+    menu(frame.menu, frame.cursor, w / 2, h * 0.5, h * 0.04)
+  }
+
+  // Pantallas cutres de victoria/derrota
+  if (frame.state === 'finished') {
+    overlay(w, h)
+    const won = frame.outcome === 'won'
+    text(won ? 'YOU WIN' : 'GAME OVER', w / 2, h * 0.4, h * 0.09, won ? '#2e5' : '#e33')
+    text(`Score: ${frame.game.score}`, w / 2, h * 0.5, h * 0.04)
+    text('Press Enter', w / 2, h * 0.62, h * 0.03, '#888')
   }
 }
