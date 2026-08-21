@@ -3,6 +3,9 @@ name: js13k size gate
 on:
   pull_request:
     branches: [main]
+  # Reusable: the Pages deploy calls this gate on every push to main,
+  # so nothing is published without passing it.
+  workflow_call:
 
 permissions:
   contents: read
