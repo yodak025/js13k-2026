@@ -105,7 +105,8 @@ export function render(frame) {
 
   // Título cutre provisional: nombre y menú
   if (frame.state === 'title') {
-    text('PRISM7', w / 2, h * 0.4, h * 0.1)
+    // El nombre es largo: la fuente se acota también por el ancho disponible
+    text('STILL HAVE NO NAME FOR THE GAME', w / 2, h * 0.4, Math.min(h * 0.08, w / 21))
     menu(frame.menu, frame.cursor, w / 2, h * 0.6, h * 0.04)
     return
   }
