@@ -43,11 +43,15 @@ export function now() {
   return (pausedAt ?? performance.now() / 1000) - startedAt
 }
 
+// Margen de pasado visible: debe cubrir la ventana de juicio de logic,
+// o una nota podría salir de la lista antes de contarse como fallo
+export const TAIL = 0.5
+
 // MusicFrame mínimo: tiempo actual y notas entre ahora y el horizonte
 export function frame() {
   const t = now()
   const notes = []
-  const first = Math.max(0, Math.ceil((t - 0.2) / SPB))
+  const first = Math.max(0, Math.ceil((t - TAIL) / SPB))
   for (let i = first; i * SPB <= t + LOOK_AHEAD; i++) {
     notes.push({ id: i, at: i * SPB, lane: lane(i) })
   }

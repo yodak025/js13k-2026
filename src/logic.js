@@ -1,7 +1,7 @@
 // Lógica jugable: recibe el MusicFrame y los inputs encolados, juzga la
 // interpretación y acumula la puntuación. No dibuja, no suena, no toca el DOM.
 
-export const WINDOW = 0.12           // margen de acierto en segundos (±120 ms)
+export const WINDOW = 0.25           // margen de acierto en segundos (±250 ms)
 export const KEYS = 'sdfjklñ'        // tecla por carril, i..vii
 
 // Estados por id de nota: undefined/0 = pendiente, 1 = acierto, 2 = fallo
